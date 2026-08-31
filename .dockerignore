@@ -1,0 +1,24 @@
+# Git metadata is not needed: the container builds the submodule sources
+# that are already checked out in the working tree.
+.git
+**/.git
+
+# Build outputs.  Note that edk2/BaseTools/Bin is *not* generated; it
+# holds checked-in files (GnuNoteBti.bin and the LTO libraries) that the
+# firmware build needs.
+Build/
+firmware/
+sdcard/
+sdcard.img
+sdcard.zip
+out/
+ipxe/src/bin*/
+edk2/BaseTools/Source/C/bin/
+edk2/BaseTools/Source/C/libs/
+**/*.o
+**/*.d
+**/*.pyc
+__pycache__/
+
+# Not needed to build
+screenshot.png
