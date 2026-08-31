@@ -3,3 +3,4 @@ firmware/
 sdcard/
 sdcard.img
 sdcard.zip
+out/
