@@ -103,11 +103,13 @@ load `start4.elf`.  Any Raspberry Pi 4 shipped with a reasonably recent
 EEPROM will work; if in doubt, update the EEPROM using [Raspberry Pi
 Imager] before using piPXE.
 
-The UEFI firmware defaults inherited from the EDK2 RPi4 platform limit
-the visible RAM to 3GB (a workaround for the xHCI controller's DMA
-constraints) and expose ACPI rather than a Device Tree.  Both can be
-changed from the UEFI setup menu, reached by pressing `Esc` during the
-three second boot timeout.
+The EDK2 RPi4 platform limits the visible RAM to 3GB by default (a
+workaround for operating systems that do not respect the PCIe
+controller's DMA constraints).  piPXE disables this limit so that all
+installed RAM is available; build with `make EFI_RAM_LIMIT_3GB=1` to
+restore it.  The firmware also exposes ACPI rather than a Device Tree
+by default.  Both settings can be changed from the UEFI setup menu,
+reached by pressing `Esc` during the three second boot timeout.
 
 Embedding a boot script
 -----------------------

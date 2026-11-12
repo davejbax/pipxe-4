@@ -15,7 +15,13 @@ EFI_BUILD	:= RELEASE
 EFI_ARCH	:= AARCH64
 EFI_TOOLCHAIN	:= GCC
 EFI_TIMEOUT	:= 3
-EFI_FLAGS	:= --pcd=PcdPlatformBootTimeOut=$(EFI_TIMEOUT)
+# Expose all installed RAM rather than the EDK2 RPi4 default of 3GB.
+# Within UEFI, DMA for PCIe devices (including the xHCI controller) is
+# already bounced below 3GB, so the limit only matters to an OS that
+# ignores the platform's DMA constraints.  Set to 1 to restore it.
+EFI_RAM_LIMIT_3GB := 0
+EFI_FLAGS	:= --pcd=PcdPlatformBootTimeOut=$(EFI_TIMEOUT) \
+		   --pcd=PcdRamLimitTo3GB=$(EFI_RAM_LIMIT_3GB)
 EFI_PLATFORM	:= RPi4
 EFI_DSC		:= edk2-platforms/Platform/RaspberryPi/$(EFI_PLATFORM)/$(EFI_PLATFORM).dsc
 EFI_FD		:= Build/$(EFI_PLATFORM)/$(EFI_BUILD)_$(EFI_TOOLCHAIN)/FV/RPI_EFI.fd
