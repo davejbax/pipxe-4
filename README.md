@@ -60,7 +60,7 @@ artifacts:
     git submodule update --init --recursive
     docker buildx bake
 
-which writes `out/sdcard.img` and `out/sdcard.zip`.  The submodule
+which writes `out/sdcard.img`, `out/sdcard-gpt.img` and `out/sdcard.zip`.  The submodule
 sources are taken from the working tree, so they must be checked out
 first.
 
@@ -134,6 +134,36 @@ context).  For example:
 
 The embedded script is executed in place of the default autoboot
 sequence, so it must bring up the network itself.
+
+Certificates and keys can be built in the same way, with `IPXE_CERT`
+(comma-separated certificates), `IPXE_PRIVKEY` (the private key for one of
+them: iPXE's TLS client certificate and `imgdecrypt` key) and `IPXE_TRUST`
+(comma-separated trusted roots, replacing iPXE's default).  Every
+`IPXE_TRUST` root must also be listed in `IPXE_CERT`, since `IPXE_TRUST`
+only records fingerprints.
+
+For a container build driven from another repository, put these files in
+a named context called `embed`; it is copied to `/embed`:
+
+    target "pipxe" {
+      context  = "https://github.com/davejbax/pipxe-4.git#<commit>"
+      target   = "artifacts"
+      contexts = { embed = "./ipxe-files" }
+      args     = { IPXE_EMBED = "/embed/boot.ipxe" }
+    }
+
+The `imgtrust`, `imgverify` and `imgdecrypt` commands are enabled (see
+`ipxe-overlay/src/config/local/rpi/general.h`).  Files under
+`ipxe-overlay/` are copied over the `ipxe` submodule at the same paths
+before building.
+
+GPT image
+---------
+
+`sdcard-gpt.img` holds the same files on a GPT disk, with space after
+the FAT partition left free.  Unlike `sdcard.img` it can be extended by
+tools that only handle GPT, such as Ignition.  The Pi 4 EEPROM
+bootloader boots from GPT disks.
 
 Licence
 -------

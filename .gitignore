@@ -2,5 +2,6 @@ Build/
 firmware/
 sdcard/
 sdcard.img
+sdcard-gpt.img
 sdcard.zip
 out/
